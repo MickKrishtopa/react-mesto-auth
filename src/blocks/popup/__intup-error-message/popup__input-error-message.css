@@ -1,0 +1,16 @@
+.popup__input-error-message {
+  font-family: "Inter", Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.25;
+  color: #ff0000;
+  margin: 5px 0 13px 36px;
+  min-height: 30px;
+}
+
+@media screen and (max-width: 900px) {
+  .popup__input-error-message {
+    margin-left: 22px;
+  }
+}

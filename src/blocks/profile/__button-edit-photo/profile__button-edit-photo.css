@@ -1,0 +1,36 @@
+.profile__button-edit-photo {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: inherit;
+  transition: background-color 0.5s;
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.profile__button-edit-photo:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  background-image: url(../../../image/pen_avatar.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+
+.profile__button-edit-photo:hover:before {
+  opacity: 1;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 900px) {
+  .profile__button-edit-photo {
+    margin: 0 auto;
+  }
+}

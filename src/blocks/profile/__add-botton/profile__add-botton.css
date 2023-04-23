@@ -1,0 +1,23 @@
+.profile__add-botton {
+  border: 2px solid #ffffff;
+  border-radius: 2px;
+  padding: 0;
+  width: 150px;
+  height: 50px;
+  background: none;
+  background-image: url(../../../image/plus.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 0.5s;
+}
+
+.profile__add-botton:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 900px) {
+  .profile__add-botton {
+    width: 282px;
+  }
+}
