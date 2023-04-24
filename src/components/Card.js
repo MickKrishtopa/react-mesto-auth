@@ -4,7 +4,7 @@ export default function Card(props) {
   }
 
   return (
-    <li className="card" key={props.card._id}>
+    <li className="card">
       <button className="card__delete" aria-label="Удалить"></button>
       <img
         onClick={handleClick}

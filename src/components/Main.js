@@ -66,14 +66,14 @@ export default function Main({
             onClick={onAddPlace}
             className="profile__add-botton"
             aria-label="Добавить фото"
-          ></button>
+          />
         </div>
       </section>
 
       <section className="elements">
         <ul className="cards">
           {cards.map((card) => (
-            <Card card={card} onCardClick={onCardClick} />
+            <Card card={card} onCardClick={onCardClick} key={card._id} />
           ))}
         </ul>
       </section>
