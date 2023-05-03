@@ -6,6 +6,7 @@ import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api.js';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
 function App() {
   //
@@ -23,7 +24,9 @@ function App() {
   useEffect(() => {
     fetchUserInfo();
   }, []);
-  console.log(currentUser);
+
+  // console.log(currentUser);
+
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -52,7 +55,7 @@ function App() {
   }
 
   return (
-    <>
+    <CurrentUserContext.Provider value={currentUser}>
       <Header />
 
       <Main
@@ -148,7 +151,7 @@ function App() {
           </button>
         </form>
       </div>
-    </>
+    </CurrentUserContext.Provider>
   );
 }
 

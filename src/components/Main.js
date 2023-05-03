@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
-import api from "../utils/api.js";
-import Card from "./Card.js";
+import { useState, useEffect, useContext } from 'react';
+import api from '../utils/api.js';
+import Card from './Card.js';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
 export default function Main({
   onEditAvatar,
@@ -8,19 +9,12 @@ export default function Main({
   onEditProfile,
   onCardClick,
 }) {
-  const [userName, setUserName] = useState("");
-  const [userDescription, setUserDescription] = useState("");
-  const [userAvatar, setUserAvatar] = useState("");
+  const currentUser = useContext(CurrentUserContext);
 
   const fetchData = async () => {
     try {
-      const [user, cards] = await Promise.all([
-        api.getUserInfo(),
-        api.getInitialCards(),
-      ]);
-      setUserName(user.name);
-      setUserDescription(user.about);
-      setUserAvatar(user.avatar);
+      const [cards] = await Promise.all([api.getInitialCards()]);
+
       setCards(cards);
     } catch (err) {
       console.log(err);
@@ -33,20 +27,18 @@ export default function Main({
 
   const [cards, setCards] = useState([]);
 
-  // useEffect(() => {
-  //   api.getInitialCards().then((res) => {
-  //     console.log(res);
-  //     setCards(res);
-  //     console.log("cards:", cards);
-  //   });
-  // }, []);
+  useEffect(() => {
+    api.getInitialCards().then((res) => {
+      setCards(res);
+    });
+  }, []);
 
   return (
     <main className="content">
       <section className="profile">
         <button onClick={onEditAvatar} className="profile__button-edit-photo">
           <img
-            src={userAvatar}
+            src={currentUser?.avatar}
             alt="Фото пользователя"
             className="profile__photo"
           />
@@ -54,13 +46,13 @@ export default function Main({
 
         <div className="profile__area">
           <div className="profile__name">
-            <h1 className="profile__title">{userName}</h1>
+            <h1 className="profile__title">{currentUser?.name}</h1>
             <button
               onClick={onEditProfile}
               className="profile__edit"
               aria-label="Изменить профиль"
             ></button>
-            <p className="profile__subtitle">{userDescription}</p>
+            <p className="profile__subtitle">{currentUser?.about}</p>
           </div>
           <button
             onClick={onAddPlace}
