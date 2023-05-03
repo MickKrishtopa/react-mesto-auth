@@ -1,13 +1,29 @@
 // import React from "react";
-import { useState } from "react";
-import Header from "./Header";
-import Main from "./Main";
-import Footer from "./Footer";
-import PopupWithForm from "./PopupWithForm";
-import ImagePopup from "./ImagePopup";
+import { useState, useEffect } from 'react';
+import Header from './Header';
+import Main from './Main';
+import Footer from './Footer';
+import PopupWithForm from './PopupWithForm';
+import ImagePopup from './ImagePopup';
+import api from '../utils/api.js';
 
 function App() {
   //
+
+  const [currentUser, setCurrentUser] = useState(null);
+  const fetchUserInfo = async () => {
+    try {
+      const [user] = await Promise.all([api.getUserInfo()]);
+      setCurrentUser(user);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+  console.log(currentUser);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -27,6 +43,7 @@ function App() {
   function handleCardClick(card) {
     setSelectedCard(card);
   }
+
   function closeAllPopups() {
     setIsAddPlacePopupOpen(false);
     setIsEditProfilePopupOpen(false);
