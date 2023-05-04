@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import api from '../utils/api.js';
 import Card from './Card.js';
 import CurrentUserContext from '../contexts/CurrentUserContext';
@@ -14,19 +14,6 @@ function Main({
   onCardDeleteClick,
 }) {
   const currentUser = useContext(CurrentUserContext);
-
-  const fetchData = async () => {
-    try {
-      const [cards] = await Promise.all([api.getInitialCards()]);
-      setCards(cards);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
     <main className="content">
