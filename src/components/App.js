@@ -1,15 +1,33 @@
 // import React from "react";
 import { useState, useEffect } from 'react';
 import Header from './Header';
-import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api.js';
 import CurrentUserContext from '../contexts/CurrentUserContext';
+import { Main } from './Main';
 
 function App() {
   //
+
+  function handleCardDeleteClick(card) {
+    api.removeCard(card._id).then(() => {
+      setCards((state) => state.filter((elem) => card._id !== elem._id));
+    });
+  }
+  const [cards, setCards] = useState([]);
+  function handleCardLikeClick(card) {
+    const isLiked = card.likes.some(
+      (cardLikes) => cardLikes._id === currentUser._id
+    );
+
+    api.toggleCardLike(card._id, isLiked).then((newCard) => {
+      setCards((state) =>
+        state.map((oldCard) => (oldCard._id === card._id ? newCard : oldCard))
+      );
+    });
+  }
 
   const [currentUser, setCurrentUser] = useState(null);
   const fetchUserInfo = async () => {
@@ -24,8 +42,6 @@ function App() {
   useEffect(() => {
     fetchUserInfo();
   }, []);
-
-  // console.log(currentUser);
 
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   function handleEditAvatarClick() {
@@ -43,7 +59,7 @@ function App() {
   }
 
   const [selectedCard, setSelectedCard] = useState(null);
-  function handleCardClick(card) {
+  function handleCardImageClick(card) {
     setSelectedCard(card);
   }
 
@@ -62,7 +78,11 @@ function App() {
         onEditProfile={handleEditProfileClick}
         onAddPlace={handleAddPlaceClick}
         onEditAvatar={handleEditAvatarClick}
-        onCardClick={handleCardClick}
+        onCardImageClick={handleCardImageClick}
+        onCardLikeClick={handleCardLikeClick}
+        cards={cards}
+        setCards={setCards}
+        onCardDeleteClick={handleCardDeleteClick}
       />
       <Footer />
 

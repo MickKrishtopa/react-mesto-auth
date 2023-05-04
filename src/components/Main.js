@@ -3,18 +3,21 @@ import api from '../utils/api.js';
 import Card from './Card.js';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
-export default function Main({
+function Main({
   onEditAvatar,
   onAddPlace,
   onEditProfile,
-  onCardClick,
+  onCardImageClick,
+  onCardLikeClick,
+  cards,
+  setCards,
+  onCardDeleteClick,
 }) {
   const currentUser = useContext(CurrentUserContext);
 
   const fetchData = async () => {
     try {
       const [cards] = await Promise.all([api.getInitialCards()]);
-
       setCards(cards);
     } catch (err) {
       console.log(err);
@@ -23,14 +26,6 @@ export default function Main({
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  const [cards, setCards] = useState([]);
-
-  useEffect(() => {
-    api.getInitialCards().then((res) => {
-      setCards(res);
-    });
   }, []);
 
   return (
@@ -65,10 +60,18 @@ export default function Main({
       <section className="elements">
         <ul className="cards">
           {cards.map((card) => (
-            <Card card={card} onCardClick={onCardClick} key={card._id} />
+            <Card
+              card={card}
+              onCardImageClick={onCardImageClick}
+              onCardLikeClick={onCardLikeClick}
+              onCardDeleteClick={onCardDeleteClick}
+              key={card._id}
+            />
           ))}
         </ul>
       </section>
     </main>
   );
 }
+
+export { Main };

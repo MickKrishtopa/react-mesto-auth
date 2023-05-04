@@ -13,21 +13,21 @@ class Api {
   }
 
   getInitialCards() {
-    return fetch(this._baseUrl + "/cards", {
+    return fetch(this._baseUrl + '/cards', {
       headers: this._headers,
     }).then((res) => this._checkResponse(res));
   }
 
   getUserInfo() {
-    return fetch(this._baseUrl + "/users/me", {
-      method: "GET",
+    return fetch(this._baseUrl + '/users/me', {
+      method: 'GET',
       headers: this._headers,
     }).then((res) => this._checkResponse(res));
   }
 
   setUserAvatar(link) {
-    return fetch(this._baseUrl + "/users/me/avatar", {
-      method: "PATCH",
+    return fetch(this._baseUrl + '/users/me/avatar', {
+      method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
         avatar: link,
@@ -36,8 +36,8 @@ class Api {
   }
 
   setUserInfo(name, about) {
-    return fetch(this._baseUrl + "/users/me", {
-      method: "PATCH",
+    return fetch(this._baseUrl + '/users/me', {
+      method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
         name: name,
@@ -48,8 +48,8 @@ class Api {
 
   addNewCard(name, link) {
     console.log(name, link);
-    return fetch(this._baseUrl + "/cards", {
-      method: "POST",
+    return fetch(this._baseUrl + '/cards', {
+      method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
         name: name,
@@ -59,26 +59,38 @@ class Api {
   }
 
   removeCard(cardId) {
-    return fetch(this._baseUrl + "/cards/" + cardId, {
-      method: "DELETE",
+    return fetch(this._baseUrl + '/cards/' + cardId, {
+      method: 'DELETE',
       headers: this._headers,
     }).then((res) => this._checkResponse(res));
   }
 
   toggleCardLike(cardId, isLiked) {
-    return fetch(this._baseUrl + "/cards/" + cardId + "/likes", {
-      method: isLiked ? "DELETE" : "PUT",
+    return fetch(this._baseUrl + '/cards/' + cardId + '/likes', {
+      method: isLiked ? 'DELETE' : 'PUT',
       headers: this._headers,
     }).then((res) => this._checkResponse(res));
   }
 }
 
 const api = new Api({
-  baseUrl: "https://mesto.nomoreparties.co/v1/cohort-63",
+  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-63',
   headers: {
-    authorization: "fea39105-f9d8-45b9-9eb7-11b3151fb950",
-    "Content-Type": "application/json",
+    authorization: 'fea39105-f9d8-45b9-9eb7-11b3151fb950',
+    'Content-Type': 'application/json',
   },
 });
 
 export default api;
+
+// fetch('https://mesto.nomoreparties.co/v1/cohort-63/cards', {
+//   method: 'POST',
+//   headers: {
+//     authorization: 'fea39105-f9d8-45b9-9eb7-11b3151fb950',
+//     'Content-Type': 'application/json',
+//   },
+//   body: JSON.stringify({
+//     name: 'MIMIMIMIMIMIMI',
+//     link: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9hpRROMmXw-drngIuQucRtMOVhBciRoV9ADG7GjVP&s',
+//   }),
+// });

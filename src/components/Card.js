@@ -10,24 +10,40 @@ export default function Card(props) {
     isLiked ? 'card__like-button_active' : ''
   } `;
 
-  function handleClick() {
-    props.onCardClick(props.card);
+  function handleLikeClick() {
+    props.onCardLikeClick(props.card);
+  }
+
+  function handleImageClick() {
+    props.onCardImageClick(props.card);
+  }
+
+  function handleDeleteClick() {
+    props.onCardDeleteClick(props.card);
   }
 
   return (
     <li className="card">
       {isOwn ? (
-        <button className="card__delete" aria-label="Удалить"></button>
+        <button
+          onClick={handleDeleteClick}
+          className="card__delete"
+          aria-label="Удалить"
+        ></button>
       ) : null}
       <img
-        onClick={handleClick}
+        onClick={handleImageClick}
         src={`${props.card.link}`}
         alt={`${props.card.name}`}
         className="card__image"
       />
       <h2 className="card__title">{props.card.name}</h2>
       <div className="card__like-area">
-        <button className={cardLikeButtonClassName} aria-label="Лайк"></button>
+        <button
+          className={cardLikeButtonClassName}
+          onClick={handleLikeClick}
+          aria-label="Лайк"
+        ></button>
         <span className="card__like-counter">{props.card.likes.length}</span>
       </div>
     </li>
