@@ -9,6 +9,7 @@ export default function EditAvatarPopup({
   function hadleSubmit(e) {
     e.preventDefault();
     onUpdateAvatar(newAvatarInput.current.value);
+    newAvatarInput.current.value = '';
   }
 
   const newAvatarInput = useRef();
