@@ -11,33 +11,46 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [cards, setCards] = useState([]);
+
   function handleAddPlaceSubmit(newCardData) {
-    api.addNewCard(newCardData.name, newCardData.link).then((newCard) => {
-      setCards([newCard, ...cards]);
-      setIsAddPlacePopupOpen(false);
-    });
+    api
+      .addNewCard(newCardData.name, newCardData.link)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        setIsAddPlacePopupOpen(false);
+      })
+      .catch((res) => console.log('Ошибка добавления новой карточки!', res));
   }
   //
   function handleUpdateAvatar(newAvatarLink) {
-    api.setUserAvatar(newAvatarLink).then((newUserData) => {
-      setCurrentUser(newUserData);
-      setIsEditAvatarPopupOpen(false);
-    });
+    api
+      .setUserAvatar(newAvatarLink)
+      .then((newUserData) => {
+        setCurrentUser(newUserData);
+        setIsEditAvatarPopupOpen(false);
+      })
+      .catch((res) => console.log('Ошибка обновления аватара!', res));
   }
 
   function handleUpdateUser(userData) {
-    api.setUserInfo(userData.name, userData.about).then((newUserData) => {
-      setCurrentUser(newUserData);
-      setIsEditProfilePopupOpen(false);
-    });
+    api
+      .setUserInfo(userData.name, userData.about)
+      .then((newUserData) => {
+        setCurrentUser(newUserData);
+        setIsEditProfilePopupOpen(false);
+      })
+      .catch((res) => console.log('Ошибка обновления данных юзера!', res));
   }
 
-  const [cards, setCards] = useState([]);
-
   function handleCardDeleteClick(card) {
-    api.removeCard(card._id).then(() => {
-      setCards((state) => state.filter((elem) => card._id !== elem._id));
-    });
+    api
+      .removeCard(card._id)
+      .then(() => {
+        setCards((state) => state.filter((elem) => card._id !== elem._id));
+      })
+      .catch((res) => console.log('Ошибка удаления карточки!', res));
   }
 
   function handleCardLikeClick(card) {
@@ -45,14 +58,15 @@ function App() {
       (cardLikes) => cardLikes._id === currentUser._id
     );
 
-    api.toggleCardLike(card._id, isLiked).then((newCard) => {
-      setCards((state) =>
-        state.map((oldCard) => (oldCard._id === card._id ? newCard : oldCard))
-      );
-    });
+    api
+      .toggleCardLike(card._id, isLiked)
+      .then((newCard) => {
+        setCards((state) =>
+          state.map((oldCard) => (oldCard._id === card._id ? newCard : oldCard))
+        );
+      })
+      .catch((res) => console.log('Ошибка лайка карточки!', res));
   }
-
-  const [currentUser, setCurrentUser] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -93,7 +107,7 @@ function App() {
 
   function closeAllPopups() {
     setIsAddPlacePopupOpen(false);
-    // setIsEditProfilePopupOpen(false);
+    setIsEditProfilePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setSelectedCard(null);
   }

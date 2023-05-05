@@ -11,10 +11,14 @@ export default function EditProfilePopup({
   const [description, setDescription] = useState('');
 
   const currentUser = useContext(CurrentUserContext);
+
   useEffect(() => {
-    setName(currentUser?.name);
-    setDescription(currentUser?.about);
-  }, [currentUser]);
+    if (isOpen) {
+      setName(currentUser?.name);
+      setDescription(currentUser?.about);
+      console.log('work');
+    }
+  }, [currentUser, isOpen]);
 
   function onChangeName(evt) {
     setName(evt.target.value);
@@ -45,7 +49,7 @@ export default function EditProfilePopup({
         maxLength="40"
         name="name"
         required
-        value={name}
+        value={name || ''}
         onChange={onChangeName}
       />
       <span className="popup__input-error-message name-input-error"></span>
@@ -57,7 +61,7 @@ export default function EditProfilePopup({
         maxLength="200"
         name="description"
         required
-        value={description}
+        value={description || ''}
         onChange={onChangeDescription}
       />
       <span className="popup__input-error-message description-input-error"></span>

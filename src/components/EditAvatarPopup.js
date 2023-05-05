@@ -1,5 +1,5 @@
 import PopupWithForm from './PopupWithForm';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function EditAvatarPopup({
   isOpen,
@@ -9,8 +9,16 @@ export default function EditAvatarPopup({
   function hadleSubmit(e) {
     e.preventDefault();
     onUpdateAvatar(newAvatarInput.current.value);
-    newAvatarInput.current.value = '';
   }
+
+  useEffect(() => {
+    if (isOpen) {
+      return () => {
+        console.log('Close popUp Avatar');
+        newAvatarInput.current.value = '';
+      };
+    }
+  }, [isOpen]);
 
   const newAvatarInput = useRef();
 
