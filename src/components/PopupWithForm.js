@@ -14,6 +14,7 @@ export default function PopupWithForm({
   }
 
   const buttonText = isLoading ? 'Сохранение...' : 'Сохранить';
+
   return (
     <div
       onClick={(e) => handleClickOutside(e)}

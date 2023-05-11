@@ -96,31 +96,41 @@ function App() {
     setIsLoadingCards(false);
   };
 
+  function handlePressEsc(e) {
+    if (e.keyCode === 27) {
+      closeAllPopups();
+    }
+  }
   useEffect(() => {
     fetchData();
   }, []);
 
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   function handleEditAvatarClick() {
+    document.addEventListener('keydown', handlePressEsc);
     setIsEditAvatarPopupOpen(true);
   }
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   function handleEditProfileClick() {
+    document.addEventListener('keydown', handlePressEsc);
     setIsEditProfilePopupOpen(true);
   }
 
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   function handleAddPlaceClick() {
+    document.addEventListener('keydown', handlePressEsc);
     setIsAddPlacePopupOpen(true);
   }
 
   function handleRemovePlaceClick(card) {
+    document.addEventListener('keydown', handlePressEsc);
     setRemoveCard(card);
   }
 
   const [selectedCard, setSelectedCard] = useState(null);
   function handleCardImageClick(card) {
+    document.addEventListener('keydown', handlePressEsc);
     setSelectedCard(card);
   }
 
@@ -130,6 +140,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setSelectedCard(null);
     setRemoveCard(false);
+    document.removeEventListener('keydown', handlePressEsc);
   }
 
   return (
