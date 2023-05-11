@@ -1,32 +1,39 @@
 import { useEffect, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 
-export default function AddPlacePopup({ isOpen, onAddPlace, closeAllPopups }) {
-  const [newCardName, setNewCardName] = useState('');
-  const [newCardLink, setNewCardLink] = useState('');
+export default function AddPlacePopup({
+  isOpen,
+  onAddPlace,
+  closeAllPopups,
+  isLoading,
+}) {
+  const [errorMessage, setErrorMessage] = useState({});
 
-  function onChangeNewCardName(evt) {
-    setNewCardName(evt.target.value);
-  }
+  const [newCardData, setNewCardData] = useState({
+    name: '',
+    link: '',
+  });
 
-  function onChangeNewCardLink(evt) {
-    setNewCardLink(evt.target.value);
+  function onChangeInput(e, name) {
+    setNewCardData({ ...newCardData, [name]: e.target.value });
+    setErrorMessage({
+      ...errorMessage,
+      [name]: e.target.validationMessage,
+    });
   }
 
   function handleSubmite(e) {
     e.preventDefault();
-    onAddPlace({
-      name: newCardName,
-      link: newCardLink,
-    });
+    onAddPlace(newCardData);
   }
 
   useEffect(() => {
     if (isOpen) {
-      return () => {
-        setNewCardName('');
-        setNewCardLink('');
-      };
+      setNewCardData({
+        name: '',
+        link: '',
+      });
+      setErrorMessage({});
     }
   }, [isOpen]);
 
@@ -37,6 +44,7 @@ export default function AddPlacePopup({ isOpen, onAddPlace, closeAllPopups }) {
       isOpen={isOpen}
       onClose={closeAllPopups}
       onSubmit={handleSubmite}
+      isLoading={isLoading}
     >
       <input
         className="popup__input popup__element-name"
@@ -46,20 +54,24 @@ export default function AddPlacePopup({ isOpen, onAddPlace, closeAllPopups }) {
         maxLength="30"
         name="title"
         required
-        onChange={onChangeNewCardName}
-        value={newCardName}
+        onChange={(e) => onChangeInput(e, 'name')}
+        value={newCardData.name}
       />
-      <span className="popup__input-error-message title-input-error"></span>
+      <span className="popup__input-error-message title-input-error">
+        {errorMessage.name}
+      </span>
       <input
         className="popup__input popup__element-llink"
         placeholder="Ссылка на картинку"
         type="url"
         name="link"
         required
-        onChange={onChangeNewCardLink}
-        value={newCardLink}
+        onChange={(e) => onChangeInput(e, 'link')}
+        value={newCardData.link}
       />
-      <span className="popup__input-error-message link-input-error"></span>
+      <span className="popup__input-error-message link-input-error">
+        {errorMessage.link}
+      </span>
     </PopupWithForm>
   );
 }

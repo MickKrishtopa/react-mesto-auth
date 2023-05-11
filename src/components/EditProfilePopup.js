@@ -6,33 +6,32 @@ export default function EditProfilePopup({
   isOpen,
   closeAllPopups,
   onUpdateUser,
+  isLoading,
 }) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-
   const currentUser = useContext(CurrentUserContext);
+  const [userData, setUserData] = useState({
+    name: '',
+    about: '',
+  });
+  const [errorMessage, setErrorMessage] = useState({});
 
   useEffect(() => {
     if (isOpen) {
-      setName(currentUser?.name);
-      setDescription(currentUser?.about);
-      console.log('work');
+      setUserData({ name: currentUser.name, about: currentUser.about });
+      setErrorMessage({});
     }
   }, [currentUser, isOpen]);
 
-  function onChangeName(evt) {
-    setName(evt.target.value);
+  function onChangeInput(e, name) {
+    setUserData({ ...userData, [name]: e.target.value });
+    setErrorMessage({ ...errorMessage, [name]: e.target.validationMessage });
   }
-  function onChangeDescription(evt) {
-    setDescription(evt.target.value);
-  }
+
   function handleSubmit(e) {
     e.preventDefault();
-    onUpdateUser({
-      name: name,
-      about: description,
-    });
+    onUpdateUser(userData);
   }
+
   return (
     <PopupWithForm
       title="Редактировать профиль"
@@ -40,6 +39,7 @@ export default function EditProfilePopup({
       isOpen={isOpen}
       onClose={closeAllPopups}
       onSubmit={handleSubmit}
+      isLoading={isLoading}
     >
       <input
         placeholder="Введите имя"
@@ -49,10 +49,12 @@ export default function EditProfilePopup({
         maxLength="40"
         name="name"
         required
-        value={name || ''}
-        onChange={onChangeName}
+        value={userData.name}
+        onChange={(e) => onChangeInput(e, 'name')}
       />
-      <span className="popup__input-error-message name-input-error"></span>
+      <span className="popup__input-error-message name-input-error">
+        {errorMessage.name}
+      </span>
       <input
         placeholder="Введите род деятельности"
         className="popup__input popup__description"
@@ -61,10 +63,12 @@ export default function EditProfilePopup({
         maxLength="200"
         name="description"
         required
-        value={description || ''}
-        onChange={onChangeDescription}
+        value={userData.about || ''}
+        onChange={(e) => onChangeInput(e, 'about')}
       />
-      <span className="popup__input-error-message description-input-error"></span>
+      <span className="popup__input-error-message description-input-error">
+        {errorMessage.about}
+      </span>
     </PopupWithForm>
   );
 }

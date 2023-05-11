@@ -9,48 +9,62 @@ import { Main } from './Main';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import Spinner from './Spinner';
+import PopupWithConfirmation from './PopupWithConfirmation';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [cards, setCards] = useState([]);
+  const [isLoadingPopup, setIsLoadingPopup] = useState(false);
+  const [isLoadingCards, setIsLoadingCards] = useState(true);
+  const [removeCard, setRemoveCard] = useState(null);
 
   function handleAddPlaceSubmit(newCardData) {
+    setIsLoadingPopup(true);
     api
       .addNewCard(newCardData.name, newCardData.link)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         setIsAddPlacePopupOpen(false);
       })
-      .catch((res) => console.log('Ошибка добавления новой карточки!', res));
+      .catch((res) => console.log('Ошибка добавления новой карточки!', res))
+      .finally(() => setIsLoadingPopup(false));
   }
   //
   function handleUpdateAvatar(newAvatarLink) {
+    setIsLoadingPopup(true);
     api
       .setUserAvatar(newAvatarLink)
       .then((newUserData) => {
         setCurrentUser(newUserData);
         setIsEditAvatarPopupOpen(false);
       })
-      .catch((res) => console.log('Ошибка обновления аватара!', res));
+      .catch((res) => console.log('Ошибка обновления аватара!', res))
+      .finally(() => setIsLoadingPopup(false));
   }
 
   function handleUpdateUser(userData) {
+    setIsLoadingPopup(true);
     api
       .setUserInfo(userData.name, userData.about)
       .then((newUserData) => {
         setCurrentUser(newUserData);
         setIsEditProfilePopupOpen(false);
       })
-      .catch((res) => console.log('Ошибка обновления данных юзера!', res));
+      .catch((res) => console.log('Ошибка обновления данных юзера!', res))
+      .finally(() => setIsLoadingPopup(false));
   }
 
   function handleCardDeleteClick(card) {
+    setIsLoadingPopup(true);
     api
       .removeCard(card._id)
       .then(() => {
         setCards((state) => state.filter((elem) => card._id !== elem._id));
+        setRemoveCard(null);
       })
-      .catch((res) => console.log('Ошибка удаления карточки!', res));
+      .catch((res) => console.log('Ошибка удаления карточки!', res))
+      .finally(() => setIsLoadingPopup(false));
   }
 
   function handleCardLikeClick(card) {
@@ -79,6 +93,7 @@ function App() {
     } catch (err) {
       console.log('Ошибка запроса начальных данных:', err);
     }
+    setIsLoadingCards(false);
   };
 
   useEffect(() => {
@@ -100,6 +115,10 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
+  function handleRemovePlaceClick(card) {
+    setRemoveCard(card);
+  }
+
   const [selectedCard, setSelectedCard] = useState(null);
   function handleCardImageClick(card) {
     setSelectedCard(card);
@@ -110,57 +129,57 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setSelectedCard(null);
+    setRemoveCard(false);
   }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header />
 
-      <Main
-        onEditProfile={handleEditProfileClick}
-        onAddPlace={handleAddPlaceClick}
-        onEditAvatar={handleEditAvatarClick}
-        onCardImageClick={handleCardImageClick}
-        onCardLikeClick={handleCardLikeClick}
-        cards={cards}
-        setCards={setCards}
-        onCardDeleteClick={handleCardDeleteClick}
-      />
+      {isLoadingCards ? (
+        <Spinner />
+      ) : (
+        <Main
+          onEditProfile={handleEditProfileClick}
+          onAddPlace={handleAddPlaceClick}
+          onEditAvatar={handleEditAvatarClick}
+          onCardImageClick={handleCardImageClick}
+          onCardLikeClick={handleCardLikeClick}
+          cards={cards}
+          onCardDeleteClick={handleRemovePlaceClick}
+        />
+      )}
       <Footer />
 
       <EditProfilePopup
+        isLoading={isLoadingPopup}
         isOpen={isEditProfilePopupOpen}
         closeAllPopups={closeAllPopups}
         onUpdateUser={handleUpdateUser}
       />
 
       <EditAvatarPopup
+        isLoading={isLoadingPopup}
         isOpen={isEditAvatarPopupOpen}
         closeAllPopups={closeAllPopups}
         onUpdateAvatar={handleUpdateAvatar}
       />
 
       <AddPlacePopup
+        isLoading={isLoadingPopup}
         isOpen={isAddPlacePopupOpen}
         closeAllPopups={closeAllPopups}
         onAddPlace={handleAddPlaceSubmit}
       />
 
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-
-      <div className="popup popup_type_delete-card">
-        <form className="popup__container">
-          <button
-            type="button"
-            className="popup__close"
-            aria-label="Закрыть окно"
-          ></button>
-          <h2 className="popup__title">Вы уверены?</h2>
-          <button type="submit" className="popup__button popup__button_enabled">
-            Да
-          </button>
-        </form>
-      </div>
+      <PopupWithConfirmation
+        onDeleteClick={handleCardDeleteClick}
+        isOpen={removeCard}
+        closeAllPopups={closeAllPopups}
+        removeCard={removeCard}
+        isLoading={isLoadingPopup}
+      />
     </CurrentUserContext.Provider>
   );
 }

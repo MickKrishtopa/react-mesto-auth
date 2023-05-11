@@ -5,9 +5,20 @@ export default function PopupWithForm({
   isOpen,
   onClose,
   onSubmit,
+  isLoading,
 }) {
+  function handleClickOutside(e) {
+    if (e.target.className.includes('popup ')) {
+      onClose();
+    }
+  }
+
+  const buttonText = isLoading ? 'Сохранение...' : 'Сохранить';
   return (
-    <div className={`popup popup_type_${name} ${isOpen ? 'popup_opened' : ''}`}>
+    <div
+      onClick={(e) => handleClickOutside(e)}
+      className={`popup popup_type_${name} ${isOpen ? 'popup_opened' : ''}`}
+    >
       <form
         onSubmit={onSubmit}
         className="popup__container popup__container-profile"
@@ -22,7 +33,7 @@ export default function PopupWithForm({
         <h2 className="popup__title">{title}</h2>
         {children}
         <button type="submit" className="popup__button popup__button_enabled">
-          Сохранить
+          {buttonText}
         </button>
       </form>
     </div>

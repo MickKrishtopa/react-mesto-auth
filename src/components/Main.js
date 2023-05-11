@@ -1,5 +1,5 @@
-import { useEffect, useContext } from 'react';
-import api from '../utils/api.js';
+import { useContext } from 'react';
+
 import Card from './Card.js';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
@@ -10,7 +10,7 @@ function Main({
   onCardImageClick,
   onCardLikeClick,
   cards,
-  setCards,
+
   onCardDeleteClick,
 }) {
   const currentUser = useContext(CurrentUserContext);

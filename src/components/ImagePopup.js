@@ -1,7 +1,14 @@
 export default function ImagePopup(props) {
+  function handleClickOutside(e) {
+    if (e.target.className.includes('popup ')) {
+      props.onClose();
+    }
+  }
+
   return (
     <div
-      className={`popup popup_big-photo ${props.card ? "popup_opened" : ""}`}
+      onClick={(e) => handleClickOutside(e)}
+      className={`popup popup_big-photo ${props.card ? 'popup_opened' : ''}`}
     >
       <figure className="popup__figure">
         <button
