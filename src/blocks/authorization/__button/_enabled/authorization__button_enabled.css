@@ -1,0 +1,31 @@
+.authorization__button_enabled {
+  display: flex;
+  justify-content: center;
+  margin: 216px auto 15px;
+  width: 358px;
+  border-radius: 2px;
+  background-color: #fff;
+  color: black;
+  font-family: 'Inter', Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.22;
+  transition: opacity 0.5s;
+  padding: 14px 0 14px;
+}
+
+.authorization__button_enabled:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 900px) {
+  .authorization__button_enabled {
+    width: 238px;
+    height: 46px;
+    font-size: 14px;
+    line-height: 1.21;
+    margin-top: 12px;
+  }
+}

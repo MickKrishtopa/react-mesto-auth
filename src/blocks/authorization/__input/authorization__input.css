@@ -1,0 +1,28 @@
+.authorization__input {
+  margin: 0 auto;
+  padding: 0;
+  width: 358px;
+  height: 27px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-family: 'Inter', Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.21;
+  outline: none;
+  background-color: inherit;
+  color: #ccc;
+}
+
+.authorization__input:first-of-type {
+  margin-top: 16px;
+}
+
+@media screen and (max-width: 900px) {
+  .authorization__input {
+    font-size: 14px;
+    line-height: 1.21;
+    width: 238px;
+  }
+}

@@ -45,3 +45,17 @@
 @import url(./blocks/popup/__intup-error-message/popup__input-error-message.css);
 @import url(./blocks/popup/__input/_error/popup__input_error.css);
 @import url(./blocks/popup/_big-photo/popup_big-photo.css);
+
+@import url(./blocks/navigation/navigation.css);
+@import url(./blocks/navigation/__user-info/navigation__user-info.css);
+@import url(./blocks/navigation/__link/navigation__link.css);
+
+@import url(./blocks/authorization/authorization.css);
+@import url(./blocks/authorization/__button/_disabled/authorization__button_disabled.css);
+@import url(./blocks/authorization/__button/_enabled/authorization__button_enabled.css);
+@import url(./blocks/authorization/__form/authorization__form.css);
+@import url(./blocks/authorization/__input/_error/authorization__input_error.css);
+@import url(./blocks/authorization/__input/authorization__input.css);
+@import url(./blocks/authorization/__intup-error-message/authorization__input-error-message.css);
+@import url(./blocks/authorization/__title/authorization__title.css);
+@import url(./blocks/authorization/__caption/authorization__caption.css);

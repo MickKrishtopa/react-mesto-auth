@@ -1,0 +1,13 @@
+.authorization {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+
+@media screen and (max-width: 900px) {
+  .authorization__container {
+    width: 282px;
+    min-height: 100px;
+  }
+}

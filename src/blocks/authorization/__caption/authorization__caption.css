@@ -1,0 +1,24 @@
+.authorization__caption {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.21;
+  color: #fff;
+  margin: 0 0 50px 0;
+  text-align: center;
+}
+
+@media screen and (max-width: 900px) {
+  .authorization__title {
+    font-size: 18px;
+    line-height: 1.22;
+    margin: 25px 0 70px 22px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .authorization__title {
+    margin-bottom: 30px;
+  }
+}

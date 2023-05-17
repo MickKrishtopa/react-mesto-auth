@@ -5,12 +5,13 @@ import Footer from './Footer';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api.js';
 import CurrentUserContext from '../contexts/CurrentUserContext';
-import { Main } from './Main';
+import Main from './Main';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import Spinner from './Spinner';
 import PopupWithConfirmation from './PopupWithConfirmation';
+import Register from './Register';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -147,7 +148,9 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <Header />
 
-      {isLoadingCards ? (
+      {true ? (
+        <Register />
+      ) : isLoadingCards ? (
         <Spinner />
       ) : (
         <Main
