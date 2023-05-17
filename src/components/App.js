@@ -12,6 +12,8 @@ import AddPlacePopup from './AddPlacePopup';
 import Spinner from './Spinner';
 import PopupWithConfirmation from './PopupWithConfirmation';
 import Register from './Register';
+import Login from './Login';
+import InfoTooltip from './InfoTooltip';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -149,7 +151,7 @@ function App() {
       <Header />
 
       {true ? (
-        <Register />
+        <Login />
       ) : isLoadingCards ? (
         <Spinner />
       ) : (
@@ -194,6 +196,8 @@ function App() {
         removeCard={removeCard}
         isLoading={isLoadingPopup}
       />
+
+      <InfoTooltip />
     </CurrentUserContext.Provider>
   );
 }
