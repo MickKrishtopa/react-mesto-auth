@@ -28,7 +28,7 @@ function App() {
   const [removeCard, setRemoveCard] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setuserEmail] = useState('');
-  const [headerNav, setHeaderNav] = useState('Регистрация');
+
   const [statusInfoTooltip, setStatusInfoTooltip] = useState({
     isOpen: false,
     status: '',
