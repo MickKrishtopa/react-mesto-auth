@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-export default function Login({ onSubmit }) {
+export default function Login({ onSubmit, toggleeNavigationText }) {
   // const buttonText = isLoading ? 'Сохранение...' : 'Зарегистрироваться';
 
   const [formValue, setformValue] = useState({ email: '', password: '' });
@@ -55,7 +55,10 @@ export default function Login({ onSubmit }) {
           Войти
         </button>
         <span className="authorization__caption">
-          Еще не зарегистрированы? <Link to="/sign-up">Регистрация</Link>
+          Еще не зарегистрированы?{' '}
+          <Link className="authorization__caption" to="/sign-up">
+            Регистрация
+          </Link>
         </span>
       </form>
     </div>

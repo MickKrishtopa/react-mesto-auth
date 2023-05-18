@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+
 import Header from './Header';
 import Footer from './Footer';
-
 import ImagePopup from './ImagePopup';
 import api from '../utils/api.js';
 import CurrentUserContext from '../contexts/CurrentUserContext';
@@ -29,7 +28,13 @@ function App() {
   const [removeCard, setRemoveCard] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setuserEmail] = useState('');
+  const [headerNav, setHeaderNav] = useState('Регистрация');
+  const [statusInfoTooltip, setStatusInfoTooltip] = useState({
+    isOpen: false,
+    status: '',
+  });
   const navigate = useNavigate();
+  const location = useLocation();
 
   function handlePressEsc(e) {
     if (e.keyCode === 27) {
@@ -118,9 +123,6 @@ function App() {
     const token = localStorage.getItem('token');
 
     authorization.checkToken(token).then((res) => {
-      console.log('Token:', token);
-      console.log(res);
-      console.log('Логиним автоматом');
       setLoggedIn(true);
       setuserEmail(res.data.email);
       navigate('/', { replace: true });
@@ -163,18 +165,36 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setSelectedCard(null);
     setRemoveCard(false);
+    setStatusInfoTooltip({
+      isOpen: false,
+      status: '',
+    });
     document.removeEventListener('keydown', handlePressEsc);
   }
 
   function handleRegistrationSubmit(email, password) {
     authorization.registration(email, password).then((res) => {
       console.log(res);
-      navigate('/sign-in', { replace: true });
+      if (res.ok) {
+        setStatusInfoTooltip({
+          isOpen: true,
+          status: 'success',
+        });
+        console.log('перенаправляем');
+        navigate('/sign-in', { replace: true });
+        return res;
+      }
+      console.log('Ошибка регистрации');
+      setStatusInfoTooltip({
+        isOpen: true,
+        status: 'error',
+      });
     });
   }
   function handleLoginSubmit(email, password) {
     authorization.login(email, password).then((res) => {
       setLoggedIn(true);
+      setuserEmail(email);
       navigate('/', { replace: true });
       localStorage.setItem('token', res.token);
     });
@@ -184,9 +204,11 @@ function App() {
     setLoggedIn(false);
     localStorage.removeItem('token');
   }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header
+        location={location}
         loggedIn={loggedIn}
         handleLogOut={handleLogOut}
         userEmail={userEmail}
@@ -198,7 +220,13 @@ function App() {
         ></Route>
         <Route
           path="/sign-in"
-          element={<Login onSubmit={handleLoginSubmit} />}
+          element={
+            isLoadingCards ? (
+              <Spinner />
+            ) : (
+              <Login onSubmit={handleLoginSubmit} />
+            )
+          }
         ></Route>
 
         <Route
@@ -249,7 +277,7 @@ function App() {
         removeCard={removeCard}
         isLoading={isLoadingPopup}
       />
-      <InfoTooltip />
+      <InfoTooltip {...statusInfoTooltip} closeAllPopups={closeAllPopups} />
     </CurrentUserContext.Provider>
   );
 }

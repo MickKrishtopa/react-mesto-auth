@@ -23,7 +23,7 @@ class Authorization {
         password: password,
         email: email,
       }),
-    }).then((res) => this._checkResponse(res));
+    });
   }
 
   login(email, password) {

@@ -9,4 +9,12 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  text-decoration: none;
+  opacity: 1;
+  transition: 1s;
+}
+
+.navigation__link:hover {
+  text-decoration: underline;
+  opacity: 0.8;
 }
