@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -15,12 +17,25 @@ import Register from './Register';
 import Login from './Login';
 import InfoTooltip from './InfoTooltip';
 
+import ProtectedRoute from './ProtectedRoute';
+import Page404 from './Page404';
+import authorization from '../utils/Authorization';
+
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [cards, setCards] = useState([]);
   const [isLoadingPopup, setIsLoadingPopup] = useState(false);
   const [isLoadingCards, setIsLoadingCards] = useState(true);
   const [removeCard, setRemoveCard] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userEmail, setuserEmail] = useState('');
+  const navigate = useNavigate();
+
+  function handlePressEsc(e) {
+    if (e.keyCode === 27) {
+      closeAllPopups();
+    }
+  }
 
   function handleAddPlaceSubmit(newCardData) {
     setIsLoadingPopup(true);
@@ -99,12 +114,17 @@ function App() {
     setIsLoadingCards(false);
   };
 
-  function handlePressEsc(e) {
-    if (e.keyCode === 27) {
-      closeAllPopups();
-    }
-  }
   useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    authorization.checkToken(token).then((res) => {
+      console.log('Token:', token);
+      console.log(res);
+      console.log('Логиним автоматом');
+      setLoggedIn(true);
+      setuserEmail(res.data.email);
+      navigate('/', { replace: true });
+    });
     fetchData();
   }, []);
 
@@ -146,25 +166,61 @@ function App() {
     document.removeEventListener('keydown', handlePressEsc);
   }
 
+  function handleRegistrationSubmit(email, password) {
+    authorization.registration(email, password).then((res) => {
+      console.log(res);
+      navigate('/sign-in', { replace: true });
+    });
+  }
+  function handleLoginSubmit(email, password) {
+    authorization.login(email, password).then((res) => {
+      setLoggedIn(true);
+      navigate('/', { replace: true });
+      localStorage.setItem('token', res.token);
+    });
+  }
+
+  function handleLogOut() {
+    setLoggedIn(false);
+    localStorage.removeItem('token');
+  }
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header />
+      <Header
+        loggedIn={loggedIn}
+        handleLogOut={handleLogOut}
+        userEmail={userEmail}
+      />
+      <Routes>
+        <Route
+          path="/sign-up"
+          element={<Register onSubmit={handleRegistrationSubmit} />}
+        ></Route>
+        <Route
+          path="/sign-in"
+          element={<Login onSubmit={handleLoginSubmit} />}
+        ></Route>
 
-      {true ? (
-        <Login />
-      ) : isLoadingCards ? (
-        <Spinner />
-      ) : (
-        <Main
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardImageClick={handleCardImageClick}
-          onCardLikeClick={handleCardLikeClick}
-          cards={cards}
-          onCardDeleteClick={handleRemovePlaceClick}
-        />
-      )}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute
+              element={isLoadingCards ? Spinner : Main}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              onCardImageClick={handleCardImageClick}
+              onCardLikeClick={handleCardLikeClick}
+              cards={cards}
+              onCardDeleteClick={handleRemovePlaceClick}
+              loggedIn={loggedIn}
+              isLoading={isLoadingCards}
+            />
+          }
+        ></Route>
+        <Route path="/*" element={<Page404 />}></Route>
+      </Routes>
+
       <Footer />
 
       <EditProfilePopup
@@ -173,21 +229,18 @@ function App() {
         closeAllPopups={closeAllPopups}
         onUpdateUser={handleUpdateUser}
       />
-
       <EditAvatarPopup
         isLoading={isLoadingPopup}
         isOpen={isEditAvatarPopupOpen}
         closeAllPopups={closeAllPopups}
         onUpdateAvatar={handleUpdateAvatar}
       />
-
       <AddPlacePopup
         isLoading={isLoadingPopup}
         isOpen={isAddPlacePopupOpen}
         closeAllPopups={closeAllPopups}
         onAddPlace={handleAddPlaceSubmit}
       />
-
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       <PopupWithConfirmation
         onDeleteClick={handleCardDeleteClick}
@@ -196,7 +249,6 @@ function App() {
         removeCard={removeCard}
         isLoading={isLoadingPopup}
       />
-
       <InfoTooltip />
     </CurrentUserContext.Provider>
   );

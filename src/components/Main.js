@@ -10,7 +10,6 @@ export default function Main({
   onCardImageClick,
   onCardLikeClick,
   cards,
-
   onCardDeleteClick,
 }) {
   const currentUser = useContext(CurrentUserContext);

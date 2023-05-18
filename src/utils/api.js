@@ -81,15 +81,3 @@ const api = new Api({
 });
 
 export default api;
-
-// fetch('https://mesto.nomoreparties.co/v1/cohort-63/cards', {
-//   method: 'POST',
-//   headers: {
-//     authorization: 'fea39105-f9d8-45b9-9eb7-11b3151fb950',
-//     'Content-Type': 'application/json',
-//   },
-//   body: JSON.stringify({
-//     name: 'MIMIMIMIMIMIMI',
-//     link: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9hpRROMmXw-drngIuQucRtMOVhBciRoV9ADG7GjVP&s',
-//   }),
-// });

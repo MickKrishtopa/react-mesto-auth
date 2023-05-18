@@ -1,9 +1,29 @@
-export default function Login() {
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+export default function Login({ onSubmit }) {
   // const buttonText = isLoading ? 'Сохранение...' : 'Зарегистрироваться';
+
+  const [formValue, setformValue] = useState({ email: '', password: '' });
+  const [errorMessage, setErrorMessage] = useState({});
+
+  const handleChangeInput = (event) => {
+    setformValue({ ...formValue, [event.target.name]: event.target.value });
+    setErrorMessage({
+      ...errorMessage,
+      [event.target.name]: event.target.validationMessage,
+    });
+  };
+
+  const handleSubmite = (e) => {
+    e.preventDefault();
+    const { email, password } = formValue;
+
+    onSubmit(email, password);
+  };
 
   return (
     <div className="authorization">
-      <form onSubmit="" className="authorization__form">
+      <form onSubmit={handleSubmite} className="authorization__form">
         <h2 className="authorization__title">Вход</h2>
         <input
           placeholder="Email"
@@ -11,14 +31,20 @@ export default function Login() {
           type="email"
           name="email"
           required
+          value={formValue.email}
+          onChange={handleChangeInput}
         />
-        <span className="authorization__input-error-message email-input-error"></span>
+        <span className="authorization__input-error-message email-input-error">
+          {errorMessage.email}
+        </span>
         <input
           placeholder="Password"
           className="authorization__input authorization__password"
           type="password"
           name="password"
           required
+          value={formValue.password}
+          onChange={handleChangeInput}
         />
         <span className="authorization__input-error-message password-input-error"></span>
 
@@ -29,7 +55,7 @@ export default function Login() {
           Войти
         </button>
         <span className="authorization__caption">
-          Еще не зарегистрированы? Регистрация
+          Еще не зарегистрированы? <Link to="/sign-up">Регистрация</Link>
         </span>
       </form>
     </div>

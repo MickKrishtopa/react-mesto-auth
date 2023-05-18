@@ -5,12 +5,6 @@
   font-size: 12px;
   line-height: 1.25;
   color: #ff0000;
-  margin: 5px 0 13px 36px;
+  margin: 5px 0 13px;
   min-height: 30px;
-}
-
-@media screen and (max-width: 900px) {
-  .authorization__input-error-message {
-    margin-left: 22px;
-  }
 }
