@@ -22,11 +22,7 @@ export default function InfoTooltip(props) {
           className="popup__info-img"
           src={props.status === 'success' ? success : fail}
         ></img>
-        <span className="popup__fetch-message">
-          {props.status === 'success'
-            ? 'Вы успешно зарегистрировались!'
-            : 'Что то пошло не так! Попробуйте еще раз.'}
-        </span>
+        <span className="popup__fetch-message">{props.message}</span>
       </form>
     </div>
   );

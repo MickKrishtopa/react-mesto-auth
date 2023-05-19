@@ -7,7 +7,6 @@ export default function Header({
   handleLogOut,
   userEmail,
 }) {
-  console.log(location);
   return (
     <header className="header">
       <img src={headerLogo} alt="Логотип проекта" className="header__logo" />
@@ -20,13 +19,18 @@ export default function Header({
             </p>
           </>
         ) : (
-          <Link
-            to={location.pathname === '/sign-in' ? '/sign-up' : '/sign-in'}
-            // onClick={toggleeNavigationText}
-            className="navigation__link"
-          >
-            {location.pathname === '/sign-up' ? 'Выход' : 'Регистрация'}
-          </Link>
+          <>
+            {location.pathname === '/sign-in' && (
+              <Link to="/sign-up" className="navigation__link">
+                Регистрация
+              </Link>
+            )}
+            {location.pathname === '/sign-up' && (
+              <Link to="/sign-in" className="navigation__link">
+                Вход
+              </Link>
+            )}
+          </>
         )}
       </nav>
     </header>

@@ -26,12 +26,18 @@ function App() {
   const [isLoadingPopup, setIsLoadingPopup] = useState(false);
   const [isLoadingCards, setIsLoadingCards] = useState(true);
   const [removeCard, setRemoveCard] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(null);
   const [userEmail, setuserEmail] = useState('');
+
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   const [statusInfoTooltip, setStatusInfoTooltip] = useState({
     isOpen: false,
     status: '',
+    message: '',
   });
   const navigate = useNavigate();
   const location = useLocation();
@@ -122,27 +128,30 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    authorization.checkToken(token).then((res) => {
-      setLoggedIn(true);
-      setuserEmail(res.data.email);
-      navigate('/', { replace: true });
-    });
-    fetchData();
+    authorization
+      .checkToken(token)
+      .then((res) => {
+        setLoggedIn(true);
+        fetchData();
+        setuserEmail(res.data.email);
+        navigate('/', { replace: true });
+      })
+      .catch((err) => {
+        setLoggedIn(false);
+        console.log('Ошибка:', err.status);
+      });
   }, []);
 
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   function handleEditAvatarClick() {
     document.addEventListener('keydown', handlePressEsc);
     setIsEditAvatarPopupOpen(true);
   }
 
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   function handleEditProfileClick() {
     document.addEventListener('keydown', handlePressEsc);
     setIsEditProfilePopupOpen(true);
   }
 
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   function handleAddPlaceClick() {
     document.addEventListener('keydown', handlePressEsc);
     setIsAddPlacePopupOpen(true);
@@ -153,7 +162,6 @@ function App() {
     setRemoveCard(card);
   }
 
-  const [selectedCard, setSelectedCard] = useState(null);
   function handleCardImageClick(card) {
     document.addEventListener('keydown', handlePressEsc);
     setSelectedCard(card);
@@ -168,41 +176,63 @@ function App() {
     setStatusInfoTooltip({
       isOpen: false,
       status: '',
+      message: '',
     });
     document.removeEventListener('keydown', handlePressEsc);
   }
 
   function handleRegistrationSubmit(email, password) {
-    authorization.registration(email, password).then((res) => {
-      console.log(res);
-      if (res.ok) {
+    authorization
+      .registration(email, password)
+      .then(() => {
         setStatusInfoTooltip({
           isOpen: true,
           status: 'success',
+          message: 'Вы успешно зарегистрировались!',
         });
-        console.log('перенаправляем');
         navigate('/sign-in', { replace: true });
-        return res;
-      }
-      console.log('Ошибка регистрации');
-      setStatusInfoTooltip({
-        isOpen: true,
-        status: 'error',
+      })
+      .catch((res) => res.json())
+      .then((res) => {
+        console.log('Ошибка регистрации:', res.error);
+
+        setStatusInfoTooltip({
+          isOpen: true,
+          status: 'error',
+          message: res.error,
+        });
       });
-    });
   }
+
   function handleLoginSubmit(email, password) {
-    authorization.login(email, password).then((res) => {
-      setLoggedIn(true);
-      setuserEmail(email);
-      navigate('/', { replace: true });
-      localStorage.setItem('token', res.token);
-    });
+    authorization
+      .login(email, password)
+      .then((res) => {
+        setLoggedIn(true);
+        fetchData();
+        setuserEmail(email);
+        navigate('/', { replace: true });
+        localStorage.setItem('token', res.token);
+      })
+      .catch((res) => res.json())
+      .then((res) => {
+        console.log('Ошибка авторизации:', res.message);
+        console.log(res.message);
+        setStatusInfoTooltip({
+          isOpen: true,
+          status: 'error',
+          message: res.message,
+        });
+      });
   }
 
   function handleLogOut() {
     setLoggedIn(false);
     localStorage.removeItem('token');
+  }
+
+  if (loggedIn === null) {
+    return;
   }
 
   return (
@@ -220,13 +250,7 @@ function App() {
         ></Route>
         <Route
           path="/sign-in"
-          element={
-            isLoadingCards ? (
-              <Spinner />
-            ) : (
-              <Login onSubmit={handleLoginSubmit} />
-            )
-          }
+          element={<Login onSubmit={handleLoginSubmit} />}
         ></Route>
 
         <Route

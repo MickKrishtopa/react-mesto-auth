@@ -9,11 +9,11 @@ class Authorization {
     if (res.ok) {
       return res.json();
     }
-    return Promise.reject(`Ошибка: ${res.status}`);
+
+    return Promise.reject(res);
   }
 
   registration(email, password) {
-    console.log(email, password);
     return fetch(this._baseUrl + '/signup', {
       method: 'POST',
       headers: {
@@ -23,7 +23,7 @@ class Authorization {
         password: password,
         email: email,
       }),
-    });
+    }).then((res) => this._checkResponse(res));
   }
 
   login(email, password) {
